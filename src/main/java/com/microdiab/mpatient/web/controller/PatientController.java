@@ -1,10 +1,10 @@
-package com.microdiab.Mpatient.web.controller;
+package com.microdiab.mpatient.web.controller;
 
 
-import com.microdiab.Mpatient.configurations.ApplicationPropertiesConfiguration;
-import com.microdiab.Mpatient.web.exceptions.PatientNotFoundException;
-import com.microdiab.Mpatient.dao.PatientDao;
-import com.microdiab.Mpatient.model.Patient;
+import com.microdiab.mpatient.configurations.ApplicationPropertiesConfiguration;
+import com.microdiab.mpatient.web.exceptions.PatientNotFoundException;
+import com.microdiab.mpatient.dao.PatientDao;
+import com.microdiab.mpatient.model.Patient;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class PatientController {
     }
 
 
-    @GetMapping("/Patients")
+    @GetMapping("/patients")
     public List<Patient> showPatientList() {
         List<Patient> patients = patientDao.findAll();
         if (patients.isEmpty()) throw new PatientNotFoundException("No patients are registered in the list.");
@@ -59,7 +59,7 @@ public class PatientController {
     }
 
 
-    @GetMapping("/Patient/{id}")
+    @GetMapping("/patient/{id}")
     public Optional<Patient> showPatientId(@PathVariable Long id) {
         Optional<Patient> patient = patientDao.findById(id);
         if (patient.isEmpty()) throw new PatientNotFoundException("The patient corresponding to the ID " + id + " does not exist.");
@@ -70,5 +70,18 @@ public class PatientController {
         return patient;
     }
 
+
+    @PostMapping("/Update/{id}")
+    public String updatePatientId(@PathVariable("id") Integer id, @Valid PatientDao patient, BindingResult result, Model model) {
+
+        // Todo Trouver le PatienDao afin de le sauvegarder
+//        if (hasValidationErrors(patient, result, model)) {
+//            return "/update";
+//        }
+
+        //patientDao.save()
+
+        return "redirect:/trade/list";
+    }
 
 }

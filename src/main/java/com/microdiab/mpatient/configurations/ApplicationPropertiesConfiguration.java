@@ -1,4 +1,4 @@
-package com.microdiab.Mpatient.configurations;
+package com.microdiab.mpatient.configurations;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;

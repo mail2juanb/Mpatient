@@ -1,4 +1,4 @@
-package com.microdiab.Mpatient;
+package com.microdiab.mpatient;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

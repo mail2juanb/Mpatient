@@ -1,4 +1,4 @@
-package com.microdiab.Mpatient.model;
+package com.microdiab.mpatient.model;
 
 import jakarta.persistence.*;
 //import lombok.*;
