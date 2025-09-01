@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.microdiab</groupId>
-    <artifactId>Mpatient</artifactId>
+    <artifactId>mpatient</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Mpatient</name>
+    <name>mpatient</name>
     <description>Microservice Patient for MicroDiab application</description>
     <url/>
     <licenses>
@@ -59,6 +59,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
