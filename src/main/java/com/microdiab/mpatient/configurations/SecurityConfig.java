@@ -1,6 +1,9 @@
 package com.microdiab.mpatient.configurations;
 
+import com.microdiab.mpatient.filter.LoggingFilter;
 import com.microdiab.mpatient.filter.RequestLoggingFilter;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -19,11 +22,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
+    @Autowired
+    private LoggingFilter loggingFilter;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").hasRole("PATIENT") // Seuls les utilisateurs avec le rôle PATIENT peuvent accéder
+                        .requestMatchers("/**").hasRole("INTERNAL") // Seuls les utilisateurs avec le rôle PATIENT peuvent accéder
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
@@ -35,10 +41,16 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        UserDetails patientUser = User.withUsername("user")
+        UserDetails patientUser = User.withUsername("username")
                 .password(encoder.encode("user"))
-                .roles("PATIENT")
+                .roles("INTERNAL")
                 .build();
         return new InMemoryUserDetailsManager(patientUser);
+    }
+
+    @PostConstruct
+    public void printEncodedPassword() {
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        System.out.println("Encoded password for 'user': " + encoder.encode("user"));
     }
 }
