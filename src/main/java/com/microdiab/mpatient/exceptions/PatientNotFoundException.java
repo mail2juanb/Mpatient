@@ -1,4 +1,4 @@
-package com.microdiab.mpatient.web.exceptions;
+package com.microdiab.mpatient.exceptions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +13,6 @@ public class PatientNotFoundException extends RuntimeException {
 
     public PatientNotFoundException(String message) {
         super(message);
-        log.info("THROW Exception : {} - message : {}", getClass().getName(), getMessage());
+        log.info("*****  THROW Exception : {} - message : {}", getClass().getName(), getMessage());
     }
 }

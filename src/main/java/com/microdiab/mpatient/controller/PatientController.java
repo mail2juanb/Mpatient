@@ -1,21 +1,17 @@
-package com.microdiab.mpatient.web.controller;
+package com.microdiab.mpatient.controller;
 
 
 import com.microdiab.mpatient.configurations.ApplicationPropertiesConfiguration;
-import com.microdiab.mpatient.web.exceptions.PatientNotFoundException;
-import com.microdiab.mpatient.dao.PatientDao;
+import com.microdiab.mpatient.exceptions.PatientNotFoundException;
+import com.microdiab.mpatient.repository.PatientRepository;
 import com.microdiab.mpatient.model.Patient;
+import com.microdiab.mpatient.service.PatientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +23,10 @@ public class PatientController {
     private static final Logger log = LoggerFactory.getLogger(PatientController.class);
 
     @Autowired
-    PatientDao patientDao;
+    PatientRepository patientRepository;
+
+    @Autowired
+    PatientService patientService;
 
     @Autowired
     ApplicationPropertiesConfiguration appProperties;
@@ -41,7 +40,7 @@ public class PatientController {
 
     @GetMapping("/patients")
     public List<Patient> showPatientList() {
-        List<Patient> patients = patientDao.findAll();
+        List<Patient> patients = patientRepository.findAll();
         if (patients.isEmpty()) throw new PatientNotFoundException("No patients are registered in the list.");
 
         log.info("Patients size = {}", patients.size());
@@ -61,7 +60,7 @@ public class PatientController {
 
     @GetMapping("/patient/{id}")
     public Optional<Patient> showPatientId(@PathVariable Long id) {
-        Optional<Patient> patient = patientDao.findById(id);
+        Optional<Patient> patient = patientRepository.findById(id);
         if (patient.isEmpty()) throw new PatientNotFoundException("The patient corresponding to the ID " + id + " does not exist.");
 
         log.info("Patient founded : {}", patient.get().getLastname());
@@ -71,17 +70,13 @@ public class PatientController {
     }
 
 
-    @PostMapping("/Update/{id}")
-    public String updatePatientId(@PathVariable("id") Integer id, @Valid PatientDao patient, BindingResult result, Model model) {
+    @PostMapping("/patient")
+    public Patient addPatient(@Valid @RequestBody Patient patient) {
+        log.info("Ajout d'un nouveau patient : {}", patient.getLastname());
+        Patient savedPatient = patientService.savePatient(patient);
+        log.info("Patient sauvegardé avec l'ID : {}", savedPatient.getId());
 
-        // Todo Trouver le PatienDao afin de le sauvegarder
-//        if (hasValidationErrors(patient, result, model)) {
-//            return "/update";
-//        }
-
-        //patientDao.save()
-
-        return "redirect:/trade/list";
+        return savedPatient;
     }
 
 }

@@ -7,5 +7,6 @@ CREATE TABLE IF NOT EXISTS patient (
     dateofbirth         DATE,
     gender              VARCHAR(1),
     address             VARCHAR(255),
-    phone               VARCHAR(50)
+    phone               VARCHAR(50),
+    CONSTRAINT uc_patient_unique UNIQUE (lastname, firstname, dateofbirth, gender)
 );
