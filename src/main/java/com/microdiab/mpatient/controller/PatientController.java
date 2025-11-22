@@ -79,4 +79,29 @@ public class PatientController {
         return savedPatient;
     }
 
+
+    @PutMapping("/patient/{id}")
+    public Patient updatePatient(@PathVariable Long id, @Valid @RequestBody Patient patientDetails) {
+        log.info("Mise à jour du patient avec l'ID : {}", id);
+
+        // Vérifiez si le patient existe
+        // NOTE : Ce doit être le service qui s'occupe de cette verification
+        Patient existingPatient = patientRepository.findById(id)
+                .orElseThrow(() -> new PatientNotFoundException("Le patient avec l'ID " + id + " n'existe pas."));
+
+        // Mettez à jour les informations du patient
+        existingPatient.setLastname(patientDetails.getLastname());
+        existingPatient.setFirstname(patientDetails.getFirstname());
+        existingPatient.setDateofbirth(patientDetails.getDateofbirth());
+        existingPatient.setGender(patientDetails.getGender());
+        existingPatient.setAddress(patientDetails.getAddress());
+        existingPatient.setPhone(patientDetails.getPhone());
+
+        // Sauvegardez les modifications
+        Patient updatedPatient = patientRepository.save(existingPatient);
+        log.info("Patient mis à jour avec succès : {}", updatedPatient.getLastname());
+
+        return updatedPatient;
+    }
+
 }
