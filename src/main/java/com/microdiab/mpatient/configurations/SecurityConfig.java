@@ -48,9 +48,9 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(patientUser);
     }
 
-    @PostConstruct
-    public void printEncodedPassword() {
-        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        System.out.println("Encoded password for 'user': " + encoder.encode("user"));
-    }
+//    @PostConstruct
+//    public void printEncodedPassword() {
+//        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//        System.out.println("Encoded password for 'user': " + encoder.encode("user"));
+//    }
 }
