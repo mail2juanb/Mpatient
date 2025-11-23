@@ -5,23 +5,20 @@ import org.springframework.boot.actuate.info.InfoContributor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+
+/*  La classe CustomInfoContributor est un composant Spring qui enrichit dynamiquement
+    les informations exposées par l'endpoint /actuator/info
+    - Elle lit les propriétés définies dans application.properties (ou d'autres sources de configuration).
+    - Elle les structure et les ajoute au JSON retourné par /actuator/info.
+    - Elle permet d'ajouter des logiques métiers ou des informations dynamiques
+      (ex: calculer une version basée sur un commit Git, ajouter des métadonnées spécifiques).*/
+
 @Component
 public class CustomInfoContributor implements InfoContributor {
-
-//    @Override
-//    public void contribute(Info.Builder builder) {
-//        Map<String, Object> infoMap = new HashMap<>();
-//        infoMap.put("app", Map.of(
-//                "version", "Version en cours de développement",
-//                "description", "MicroDiab, application d'analyse du diabète des patients",
-//                "documentation", "Lien vers la documentation de l'application",
-//                "information", "Informations utiles"
-//        ));
-//        builder.withDetails(infoMap);
-//    }
 
     private final Environment environment;
 
@@ -32,10 +29,12 @@ public class CustomInfoContributor implements InfoContributor {
     @Override
     public void contribute(Info.Builder builder) {
         Map<String, Object> appInfo = new HashMap<>();
-        appInfo.put("version", environment.getProperty("info.app.version", "Version non définie"));
-        appInfo.put("description", environment.getProperty("info.app.description", "Description non définie"));
-        appInfo.put("documentation", environment.getProperty("info.app.documentation", "Documentation non définie"));
-        appInfo.put("information", environment.getProperty("info.app.information", "Informations non définies"));
+        appInfo.put("version", environment.getProperty("info.app.version", "mpatient - Version non définie"));
+        appInfo.put("description", environment.getProperty("info.app.description", "mpatient - Description non définie"));
+        appInfo.put("documentation", environment.getProperty("info.app.documentation", "mpatient - Documentation non définie"));
+        appInfo.put("information", environment.getProperty("info.app.information", "mpatient - Informations non définies"));
+        // Ajout d'une info dynamique (ex: horodatage)
+        appInfo.put("lastUpdated", LocalDateTime.now().toString());
 
         Map<String, Object> infoMap = new HashMap<>();
         infoMap.put("app", appInfo);
