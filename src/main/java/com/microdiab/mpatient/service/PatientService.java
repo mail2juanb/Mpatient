@@ -18,17 +18,8 @@ public class PatientService {
                 patient.getLastname(),
                 patient.getFirstname(),
                 patient.getDateofbirth(),
-                patient.getGender()
-        )) {
-            throw new PatientDuplicateException(
-                    String.format(
-                            "Un patient avec les mêmes nom (%s), prénom (%s), date de naissance (%s) et genre (%s) existe déjà.",
-                            patient.getLastname(),
-                            patient.getFirstname(),
-                            patient.getDateofbirth(),
-                            patient.getGender()
-                    )
-            );
+                patient.getGender())) {
+            throw new PatientDuplicateException ("A patient already exists with the same last name, first name, date of birth, and gender.");
         }
         // Sauvegarde le patient
         return patientRepository.save(patient);

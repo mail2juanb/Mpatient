@@ -1,12 +1,13 @@
 package com.microdiab.mpatient.model;
 
 import jakarta.persistence.*;
-//import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 
 import java.time.LocalDate;
 
 
-//@Data pourquoi marche pas ??
 @Entity
 @Table(name = "patient")
 public class Patient {
@@ -15,11 +16,21 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "lastname is mandatory gros boulet !")
     private String lastname;
+
+    @NotBlank(message = "firstname is mandatory")
     private String firstname;
+
+    @NotNull(message = "dateofbirth is mandatory")
+    @Past(message = "dateofbirth must be in the past")
     private LocalDate dateofbirth;
+
+    @NotBlank(message = "gender is mandatory")
     private String gender;
+
     private String address;
+
     private String phone;
 
 
@@ -40,6 +51,7 @@ public class Patient {
         return id;
     }
 
+    // NOTE : On ne fera jamais de set sur un id
 //    public void setId(Long id) {
 //        this.id = id;
 //    }

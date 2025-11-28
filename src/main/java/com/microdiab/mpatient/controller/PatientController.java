@@ -2,6 +2,7 @@ package com.microdiab.mpatient.controller;
 
 
 import com.microdiab.mpatient.configurations.ApplicationPropertiesConfiguration;
+import com.microdiab.mpatient.exceptions.PatientDuplicateException;
 import com.microdiab.mpatient.exceptions.PatientNotFoundException;
 import com.microdiab.mpatient.repository.PatientRepository;
 import com.microdiab.mpatient.model.Patient;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -71,12 +74,20 @@ public class PatientController {
 
 
     @PostMapping("/patient")
-    public Patient addPatient(@Valid @RequestBody Patient patient) {
+    public ResponseEntity<?> addPatient(@Valid @RequestBody Patient patient, BindingResult bindingResult) {
+        // ResponseEntity<?> : Permet de retourner soit le patient sauvegardé, soit une erreur.
         log.info("Ajout d'un nouveau patient : {}", patient.getLastname());
+
+        if (bindingResult.hasErrors()) {
+            // Retourne les erreurs de validation
+            log.info("Patient non sauvegardé, erreur : {}", bindingResult.getAllErrors());
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+
+        // Si pas d'erreur de validation, sauvegarde le patient. Les autres erreurs de validation sont gérés par le globalexceptionhandler)
         Patient savedPatient = patientService.savePatient(patient);
         log.info("Patient sauvegardé avec l'ID : {}", savedPatient.getId());
-
-        return savedPatient;
+        return ResponseEntity.ok(savedPatient);
     }
 
 
