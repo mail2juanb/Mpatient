@@ -5,14 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
+// 404 Patient introuvable
 public class PatientNotFoundException extends RuntimeException {
-
 
     private static final Logger log = LoggerFactory.getLogger(PatientNotFoundException.class);
 
     public PatientNotFoundException(String message) {
         super(message);
-        log.info("*****  THROW Exception : {} - message : {}", getClass().getName(), getMessage());
+        log.warn("*****  THROW Exception : {} - message : {}", getClass().getName(), getMessage());
     }
 }

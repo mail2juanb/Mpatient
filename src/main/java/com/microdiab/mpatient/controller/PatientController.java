@@ -74,14 +74,14 @@ public class PatientController {
 
 
     @PostMapping("/patient")
-    public ResponseEntity<?> addPatient(@Valid @RequestBody Patient patient, BindingResult bindingResult) {
+    public ResponseEntity<?> addPatient(@Valid @RequestBody Patient patient, BindingResult result) {
         // ResponseEntity<?> : Permet de retourner soit le patient sauvegardé, soit une erreur.
         log.info("Ajout d'un nouveau patient : {}", patient.getLastname());
 
-        if (bindingResult.hasErrors()) {
+        if (result.hasErrors()) {
             // Retourne les erreurs de validation
-            log.info("Patient non sauvegardé, erreur : {}", bindingResult.getAllErrors());
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+            log.info("Patient non sauvegardé, erreur de validation : {}", result.getAllErrors());
+            return ResponseEntity.badRequest().body(result.getAllErrors());
         }
 
         // Si pas d'erreur de validation, sauvegarde le patient. Les autres erreurs de validation sont gérés par le globalexceptionhandler)
@@ -92,27 +92,19 @@ public class PatientController {
 
 
     @PutMapping("/patient/{id}")
-    public Patient updatePatient(@PathVariable Long id, @Valid @RequestBody Patient patientDetails) {
+    public ResponseEntity<?> updatePatient(@PathVariable Long id, @Valid @RequestBody Patient updatePatient, BindingResult result) {
+
         log.info("Mise à jour du patient avec l'ID : {}", id);
 
-        // Vérifiez si le patient existe
-        // NOTE : Ce doit être le service qui s'occupe de cette verification
-        Patient existingPatient = patientRepository.findById(id)
-                .orElseThrow(() -> new PatientNotFoundException("Le patient avec l'ID " + id + " n'existe pas."));
+        if (result.hasErrors()) {
+            // Retourne les erreurs de validation
+            log.info("Patient non sauvegardé, erreur de validation : {}", result.getAllErrors());
+            return ResponseEntity.badRequest().body(result.getAllErrors());
+        }
 
-        // Mettez à jour les informations du patient
-        existingPatient.setLastname(patientDetails.getLastname());
-        existingPatient.setFirstname(patientDetails.getFirstname());
-        existingPatient.setDateofbirth(patientDetails.getDateofbirth());
-        existingPatient.setGender(patientDetails.getGender());
-        existingPatient.setAddress(patientDetails.getAddress());
-        existingPatient.setPhone(patientDetails.getPhone());
-
-        // Sauvegardez les modifications
-        Patient updatedPatient = patientRepository.save(existingPatient);
+        Patient updatedPatient = patientService.updatePatient(id, updatePatient);
         log.info("Patient mis à jour avec succès : {}", updatedPatient.getLastname());
-
-        return updatedPatient;
+        return ResponseEntity.ok(updatedPatient);
     }
 
 }
