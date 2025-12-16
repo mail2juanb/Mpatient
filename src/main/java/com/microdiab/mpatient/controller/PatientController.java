@@ -1,8 +1,6 @@
 package com.microdiab.mpatient.controller;
 
 
-import com.microdiab.mpatient.configurations.ApplicationPropertiesConfiguration;
-import com.microdiab.mpatient.exceptions.PatientDuplicateException;
 import com.microdiab.mpatient.exceptions.PatientNotFoundException;
 import com.microdiab.mpatient.repository.PatientRepository;
 import com.microdiab.mpatient.model.Patient;
@@ -31,45 +29,27 @@ public class PatientController {
     @Autowired
     PatientService patientService;
 
-    @Autowired
-    ApplicationPropertiesConfiguration appProperties;
-
-
-    @GetMapping("/")
-    public String showHome() {
-        return "Hello, this is patient home !!";
-    }
-
 
     @GetMapping("/patients")
-    public List<Patient> showPatientList() {
+    public ResponseEntity<List<Patient>> showPatientList() {
         List<Patient> patients = patientRepository.findAll();
-        if (patients.isEmpty()) throw new PatientNotFoundException("No patients are registered in the list.");
 
         log.info("Patients size = {}", patients.size());
-        int i = 0;
-        for (Patient patient : patients) {
-            log.info("{} - patient : {}", i, patient.getLastname());
-            i++;
-        }
 
-        if (appProperties.getLimitDePatients() > 0) {
-            return patients.subList(0, appProperties.getLimitDePatients());
-        }
-
-        return patients;
+        return ResponseEntity.ok(patients);
     }
 
 
     @GetMapping("/patient/{id}")
-    public Optional<Patient> showPatientId(@PathVariable Long id) {
+    public ResponseEntity<Patient> showPatientId(@PathVariable Long id) {
         Optional<Patient> patient = patientRepository.findById(id);
+        log.warn("Patient non trouvé pour l'ID : {}", id);
         if (patient.isEmpty()) throw new PatientNotFoundException("The patient corresponding to the ID " + id + " does not exist.");
 
         log.info("Patient founded : {}", patient.get().getLastname());
         log.info("Patient dateofbirth : {}", patient.get().getDateofbirth());
 
-        return patient;
+        return ResponseEntity.ok(patient.get());
     }
 
 
