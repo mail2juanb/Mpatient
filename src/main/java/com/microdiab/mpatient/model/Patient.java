@@ -16,7 +16,7 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "lastname is mandatory gros boulet !")
+    @NotBlank(message = "lastname is mandatory")
     private String lastname;
 
     @NotBlank(message = "firstname is mandatory")
@@ -51,10 +51,9 @@ public class Patient {
         return id;
     }
 
-    // NOTE : On ne fera jamais de set sur un id
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getLastname() {
         return lastname;

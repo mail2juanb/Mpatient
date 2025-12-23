@@ -124,11 +124,31 @@
             <scope>test</scope>
         </dependency>
 
+<!--        Dependances for tests-->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
@@ -171,6 +191,25 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+<!--            Mockito utilise actuellement une méthode dynamique pour charger un agent Java (byte-buddy-agent),-->
+<!--            ce qui ne sera plus autorisé par défaut dans les futures versions du JDK.-->
+<!--            Modifie la configuration de Maven Surefire (pour les tests unitaires) dans ton pom.xml pour ajouter-->
+<!--            Mockito comme agent JVM et désactiver le partage des classes.-->
+<!--            Cela garantit que tes tests continueront à fonctionner avec les futures versions du JDK.-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <argLine>
+                        -Xshare:off
+                        -javaagent:"${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar"=--inline-mock-maker-enable
+                    </argLine>
+                </configuration>
+            </plugin>
+
+
         </plugins>
     </build>
 

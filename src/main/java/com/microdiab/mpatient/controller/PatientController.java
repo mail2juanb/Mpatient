@@ -33,7 +33,6 @@ public class PatientController {
     @GetMapping("/patients")
     public ResponseEntity<List<Patient>> showPatientList() {
         List<Patient> patients = patientRepository.findAll();
-
         log.info("Patients size = {}", patients.size());
 
         return ResponseEntity.ok(patients);
@@ -43,7 +42,6 @@ public class PatientController {
     @GetMapping("/patient/{id}")
     public ResponseEntity<Patient> showPatientId(@PathVariable Long id) {
         Optional<Patient> patient = patientRepository.findById(id);
-        log.warn("Patient non trouvé pour l'ID : {}", id);
         if (patient.isEmpty()) throw new PatientNotFoundException("The patient corresponding to the ID " + id + " does not exist.");
 
         log.info("Patient founded : {}", patient.get().getLastname());
