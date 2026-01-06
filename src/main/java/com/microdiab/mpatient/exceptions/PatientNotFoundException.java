@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 // 404 Patient introuvable
+@ResponseStatus(HttpStatus.NOT_FOUND)
 public class PatientNotFoundException extends RuntimeException {
 
     private static final Logger log = LoggerFactory.getLogger(PatientNotFoundException.class);
