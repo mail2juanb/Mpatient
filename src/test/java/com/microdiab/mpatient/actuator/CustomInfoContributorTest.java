@@ -25,10 +25,11 @@ class CustomInfoContributorTest {
     @Test
     void contribute_ShouldAddAppInfoToBuilder() {
         // Arrange
-        when(environment.getProperty("info.app.version", "mpatient - Version non définie")).thenReturn("1.0.0");
-        when(environment.getProperty("info.app.description", "mpatient - Description non définie")).thenReturn("Gestion des patients");
-        when(environment.getProperty("info.app.documentation", "mpatient - Documentation non définie")).thenReturn("https://docs.microdiab.com/mpatient");
-        when(environment.getProperty("info.app.information", "mpatient - Informations non définies")).thenReturn("Microservice de gestion des patients");
+        when(environment.getProperty("info.app.version", "mpatient - Version not defined")).thenReturn("1.0.0");
+        when(environment.getProperty("info.app.description", "mpatient - Description not defined")).thenReturn("Gestion des patients");
+        when(environment.getProperty("info.app.documentation.swagger", "mpatient - Swagger Documentation not defined")).thenReturn("https://docs.microdiab.com/mpatient/swagger");
+        when(environment.getProperty("info.app.documentation.javadoc", "mpatient - Javadoc Documentation not defined")).thenReturn("https://docs.microdiab.com/mpatient/javadoc");
+        when(environment.getProperty("info.app.information", "mpatient - Informations not defined")).thenReturn("Microservice de gestion des patients");
 
         Info.Builder builder = new Info.Builder();
 
@@ -47,7 +48,8 @@ class CustomInfoContributorTest {
 
         assertEquals("1.0.0", appInfo.get("version"));
         assertEquals("Gestion des patients", appInfo.get("description"));
-        assertEquals("https://docs.microdiab.com/mpatient", appInfo.get("documentation"));
+        assertEquals("https://docs.microdiab.com/mpatient/swagger", appInfo.get("documentation-swagger"));
+        assertEquals("https://docs.microdiab.com/mpatient/javadoc", appInfo.get("documentation-javadoc"));
         assertEquals("Microservice de gestion des patients", appInfo.get("information"));
         assertNotNull(appInfo.get("lastUpdated"));
     }
@@ -55,10 +57,11 @@ class CustomInfoContributorTest {
     @Test
     void contribute_ShouldUseDefaultValuesIfPropertiesAreMissing() {
         // Arrange
-        when(environment.getProperty("info.app.version", "mpatient - Version non définie")).thenReturn("mpatient - Version non définie");
-        when(environment.getProperty("info.app.description", "mpatient - Description non définie")).thenReturn("mpatient - Description non définie");
-        when(environment.getProperty("info.app.documentation", "mpatient - Documentation non définie")).thenReturn("mpatient - Documentation non définie");
-        when(environment.getProperty("info.app.information", "mpatient - Informations non définies")).thenReturn("mpatient - Informations non définies");
+        when(environment.getProperty("info.app.version", "mpatient - Version not defined")).thenReturn("mpatient - Version not defined");
+        when(environment.getProperty("info.app.description", "mpatient - Description not defined")).thenReturn("mpatient - Description not defined");
+        when(environment.getProperty("info.app.documentation.swagger", "mpatient - Swagger Documentation not defined")).thenReturn("mpatient - Swagger Documentation not defined");
+        when(environment.getProperty("info.app.documentation.javadoc", "mpatient - Javadoc Documentation not defined")).thenReturn("mpatient - Javadoc Documentation not defined");
+        when(environment.getProperty("info.app.information", "mpatient - Informations not defined")).thenReturn("mpatient - Informations not defined");
 
         Info.Builder builder = new Info.Builder();
 
@@ -75,10 +78,12 @@ class CustomInfoContributorTest {
         @SuppressWarnings("unchecked")
         Map<String, Object> appInfo = (Map<String, Object>) details.get("app");
 
-        assertEquals("mpatient - Version non définie", appInfo.get("version"));
-        assertEquals("mpatient - Description non définie", appInfo.get("description"));
-        assertEquals("mpatient - Documentation non définie", appInfo.get("documentation"));
-        assertEquals("mpatient - Informations non définies", appInfo.get("information"));
+        assertEquals("mpatient - Version not defined", appInfo.get("version"));
+        assertEquals("mpatient - Description not defined", appInfo.get("description"));
+        assertEquals("mpatient - Swagger Documentation not defined", appInfo.get("documentation-swagger"));
+        assertEquals("mpatient - Javadoc Documentation not defined", appInfo.get("documentation-javadoc"));
+        assertEquals("mpatient - Informations not defined", appInfo.get("information"));
         assertNotNull(appInfo.get("lastUpdated"));
     }
+
 }
