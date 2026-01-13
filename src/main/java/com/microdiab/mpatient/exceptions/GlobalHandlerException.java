@@ -44,12 +44,12 @@ public class GlobalHandlerException {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        //log.info("*** ExceptionHandler for MethodArgumentNotValidException ***");
+        log.info("*** ExceptionHandler for MethodArgumentNotValidException ***");
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            //log.info("*** MethodArgumentNotValidException => {} : {} ***", fieldName, errorMessage);
+            log.info("*** MethodArgumentNotValidException => {} : {} ***", fieldName, errorMessage);
             errors.put(fieldName, errorMessage);
         });
         return ResponseEntity.badRequest().body(errors);

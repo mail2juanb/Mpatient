@@ -126,7 +126,7 @@ public class PatientController {
 
         // Si pas d'erreur de validation, sauvegarde le patient. Les autres erreurs de validation sont gérés par le globalexceptionhandler)
         Patient savedPatient = patientService.savePatient(patient);
-        //log.info("Patient sauvegardé avec l'ID : {}", savedPatient.getId());
+        log.info("Patient sauvegardé avec l'ID : {}", savedPatient.getId());
         return ResponseEntity.ok(savedPatient);
     }
 
@@ -149,16 +149,16 @@ public class PatientController {
     @PutMapping("/patient/{id}")
     public ResponseEntity<?> updatePatient(@PathVariable Long id, @Valid @RequestBody Patient updatePatient, BindingResult result) {
 
-        //log.info("Mise à jour du patient avec l'ID : {}", id);
+        log.info("Mise à jour du patient avec l'ID : {}", id);
 
         if (result.hasErrors()) {
             // Retourne les erreurs de validation
-            //log.info("Patient non sauvegardé, erreur de validation : {}", result.getAllErrors());
+            log.info("Patient non sauvegardé, erreur de validation : {}", result.getAllErrors());
             return ResponseEntity.badRequest().body(result.getAllErrors());
         }
 
         Patient updatedPatient = patientService.updatePatient(id, updatePatient);
-        //log.info("Patient mis à jour avec succès : {}", updatedPatient.getLastname());
+        log.info("Patient mis à jour avec succès : {}", updatedPatient.getLastname());
         return ResponseEntity.ok(updatedPatient);
     }
 
