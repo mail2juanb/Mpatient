@@ -5,6 +5,8 @@ import com.microdiab.mpatient.exceptions.PatientNotFoundException;
 import com.microdiab.mpatient.repository.PatientRepository;
 import com.microdiab.mpatient.model.Patient;
 import com.microdiab.mpatient.service.PatientService;
+import com.microdiab.mpatient.tracing.TracingHelper;
+import io.micrometer.tracing.annotation.NewSpan;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,7 +38,6 @@ import java.util.Optional;
  * @see com.microdiab.mpatient.model.Patient
  */
 @RestController
-//@RequiredArgsConstructor
 @Tag(name = "mpatient API", description = "API for patient management")
 public class PatientController {
 
@@ -48,6 +49,9 @@ public class PatientController {
     /** Service for handling patient business logic. */
     private final PatientService patientService;
 
+    /** Service for tracing business logic. */
+    private final TracingHelper tracing;
+
 
     /**
      * Constructs a new {@code PatientController} with the specified repository and service.
@@ -58,10 +62,11 @@ public class PatientController {
      * @param patientService    the service handling patient business logic
      */
     @Autowired
-    public PatientController(PatientRepository patientRepository, PatientService patientService) {
+    public PatientController(PatientRepository patientRepository, PatientService patientService, TracingHelper tracing) {
         // Spring will inject dependencies
         this.patientRepository = patientRepository;
         this.patientService = patientService;
+        this.tracing = tracing;
     }
 
 
@@ -77,8 +82,16 @@ public class PatientController {
                                         array = @ArraySchema(schema = @Schema(implementation = Patient.class))))
     })
     @GetMapping("/patients")
+    @NewSpan("mpatient-list-patients")
     public ResponseEntity<List<Patient>> showPatientList() {
+
+        tracing.tag("endpoint", "/patients");
+        tracing.event("Fetching all patients");
+
         List<Patient> patients = patientRepository.findAll();
+
+        tracing.tag("patient.count", patients.size());
+
         return ResponseEntity.ok(patients);
     }
 
@@ -97,9 +110,20 @@ public class PatientController {
         @ApiResponse(responseCode = "404", description = "Patient not found")
     })
     @GetMapping("/patient/{id}")
+    @NewSpan("mpatient-get-patient")
     public ResponseEntity<Patient> showPatientId(@PathVariable Long id) {
+
+        tracing.tag("endpoint", "/patient/{id}");
+        tracing.tag("patient.id", id);
+        tracing.event("Fetching patient");
+
         Optional<Patient> patient = patientRepository.findById(id);
-        if (patient.isEmpty()) throw new PatientNotFoundException("The patient corresponding to the ID " + id + " does not exist.");
+
+        if (patient.isEmpty()) {
+            tracing.error("PatientNotFound","Patient not found with ID " + id);
+            throw new PatientNotFoundException("The patient corresponding to the ID " + id + " does not exist.");
+        }
+
         return ResponseEntity.ok(patient.get());
     }
 
@@ -119,14 +143,25 @@ public class PatientController {
         @ApiResponse(responseCode = "400", description = "Validation error")
     })
     @PostMapping("/patient")
+    @NewSpan("mpatient-add-patient")
     public ResponseEntity<?> addPatient(@Valid @RequestBody Patient patient, BindingResult result) {
+
+        tracing.tag("endpoint", "/patient");
+        tracing.event("Adding new patient");
+
         if (result.hasErrors()) {
+            tracing.error("ValidationError", result.getAllErrors().toString());
             return ResponseEntity.badRequest().body(result.getAllErrors());
         }
 
         // Si pas d'erreur de validation, sauvegarde le patient. Les autres erreurs de validation sont gérés par le globalexceptionhandler)
         Patient savedPatient = patientService.savePatient(patient);
-        log.info("Patient sauvegardé avec l'ID : {}", savedPatient.getId());
+
+        tracing.tag("patient.id", savedPatient.getId());
+        tracing.event("Patient saved successfully");
+
+        log.debug("Patient recorded with l'ID : {}", savedPatient.getId());
+
         return ResponseEntity.ok(savedPatient);
     }
 
@@ -147,18 +182,25 @@ public class PatientController {
         @ApiResponse(responseCode = "400", description = "Validation error")
     })
     @PutMapping("/patient/{id}")
+    @NewSpan("mpatient-update-patient")
     public ResponseEntity<?> updatePatient(@PathVariable Long id, @Valid @RequestBody Patient updatePatient, BindingResult result) {
 
-        log.info("Mise à jour du patient avec l'ID : {}", id);
+        tracing.tag("endpoint", "/patient/{id}");
+        tracing.tag("patient.id", id);
+        tracing.event("Updating patient");
 
         if (result.hasErrors()) {
+            tracing.error("ValidationError", result.getAllErrors().toString());
             // Retourne les erreurs de validation
-            log.info("Patient non sauvegardé, erreur de validation : {}", result.getAllErrors());
+            log.debug("Patient not saved, validation error : {}", result.getAllErrors());
             return ResponseEntity.badRequest().body(result.getAllErrors());
         }
 
         Patient updatedPatient = patientService.updatePatient(id, updatePatient);
-        log.info("Patient mis à jour avec succès : {}", updatedPatient.getLastname());
+
+        tracing.event("Patient updated successfully");
+
+        log.debug("Patient successfully updated : {}", updatedPatient.getLastname());
         return ResponseEntity.ok(updatedPatient);
     }
 

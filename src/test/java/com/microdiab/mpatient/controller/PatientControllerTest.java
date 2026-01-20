@@ -4,6 +4,7 @@ import com.microdiab.mpatient.exceptions.PatientNotFoundException;
 import com.microdiab.mpatient.model.Patient;
 import com.microdiab.mpatient.repository.PatientRepository;
 import com.microdiab.mpatient.service.PatientService;
+import com.microdiab.mpatient.tracing.TracingHelper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,6 +31,9 @@ public class PatientControllerTest {
 
     @Mock
     private PatientService patientService;
+
+    @Mock
+    private TracingHelper tracing;
 
     @InjectMocks
     private PatientController patientController;

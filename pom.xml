@@ -259,6 +259,7 @@
                             <excludes>
                                 <exclude>com/microdiab/mpatient/MpatientApplication*</exclude>
                                 <exclude>com/microdiab/mpatient/configurations/**</exclude>
+                                <exclude>com/microdiab/mpatient/tracing/**</exclude>
                             </excludes>
                         </configuration>
                     </execution>
@@ -276,6 +277,7 @@
                             <excludes>
                                 <exclude>com/microdiab/mpatient/MpatientApplication*</exclude>
                                 <exclude>com/microdiab/mpatient/configurations/**</exclude>
+                                <exclude>com/microdiab/mpatient/tracing/**</exclude>
                             </excludes>
                         </configuration>
                     </execution>
@@ -293,6 +295,7 @@
                             <excludes>
                                 <exclude>com/microdiab/mpatient/MpatientApplication*</exclude>
                                 <exclude>com/microdiab/mpatient/configurations/**</exclude>
+                                <exclude>com/microdiab/mpatient/tracing/**</exclude>
                             </excludes>
                         </configuration>
                     </execution>
