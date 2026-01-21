@@ -52,7 +52,7 @@ class RequestLoggingFilterTest {
     void setUp() {
         filter = new RequestLoggingFilter();
 
-        // Configuration du logger pour capturer les logs
+        // Configuring the logger to capture logs
         Logger logger = (Logger) LoggerFactory.getLogger(RequestLoggingFilter.class);
         listAppender = new ListAppender<>();
         listAppender.start();

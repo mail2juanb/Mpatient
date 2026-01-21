@@ -41,7 +41,7 @@ public class PatientServiceTest {
         patient.setPhone("0123456789");
     }
 
-    // Vérifie que le patient est bien sauvegardé si aucun doublon n’existe.
+
     @Test
     void savePatient_shouldSavePatient_whenNoDuplicate() {
         when(patientRepository.existsByLastnameAndFirstnameAndDateofbirthAndGender(
@@ -59,7 +59,7 @@ public class PatientServiceTest {
         verify(patientRepository, times(1)).save(patient);
     }
 
-    // Vérifie qu’une exception 'PatientDuplicateException' est levée si un doublon est détecté.
+
     @Test
     void savePatient_shouldThrowException_whenDuplicateExists() {
         when(patientRepository.existsByLastnameAndFirstnameAndDateofbirthAndGender(
@@ -74,10 +74,10 @@ public class PatientServiceTest {
         });
     }
 
-    // Vérifie que les informations du patient sont mises à jour correctement.
+
     @Test
     void updatePatient_shouldUpdatePatient_whenPatientExists() {
-        // Patient existant en base
+        // Existing patient in database
         Patient existingPatient = new Patient();
         existingPatient.setId(1L);
         existingPatient.setLastname("Dupont");
@@ -87,7 +87,7 @@ public class PatientServiceTest {
         existingPatient.setAddress("123 Rue de Paris");
         existingPatient.setPhone("0123456789");
 
-        // Patient avec les nouvelles données
+        // Patient with the new data
         Patient updatedPatient = new Patient();
         updatedPatient.setLastname("Martin");
         updatedPatient.setFirstname("Pierre");
@@ -96,26 +96,26 @@ public class PatientServiceTest {
         updatedPatient.setAddress("456 Rue de Lyon");
         updatedPatient.setPhone("0987654321");
 
-        // Mock du repository
+        // Mock of the repository
         when(patientRepository.findById(1L)).thenReturn(Optional.of(existingPatient));
         when(patientRepository.save(any(Patient.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Appel de la méthode
+        // Method call
         Patient result = patientService.updatePatient(1L, updatedPatient);
 
-        // Vérifications
+        // Verifications
         assertNotNull(result);
         assertEquals("Martin", result.getLastname());
         assertEquals("Pierre", result.getFirstname());
         assertEquals("456 Rue de Lyon", result.getAddress());
         assertEquals("0987654321", result.getPhone());
 
-        // Vérification que save est appelé avec l'objet existant (mis à jour)
+        // Verify that save is called with the existing (updated) object
         verify(patientRepository, times(1)).save(existingPatient);
     }
 
 
-    // Vérifie qu’une exception 'PatientNotFoundException' est levée si le patient n’existe pas.
+
     @Test
     void updatePatient_shouldThrowException_whenPatientNotFound() {
         when(patientRepository.findById(1L)).thenReturn(Optional.empty());
@@ -125,8 +125,7 @@ public class PatientServiceTest {
         });
     }
 
-    // Vérifie que la méthode lève une PatientNotFoundException si updatePatient est null
-    // (car la méthode ne vérifie pas ce cas et essaie de chercher le patient en base).
+
     @Test
     void updatePatient_shouldThrowPatientNotFoundException_whenUpdatePatientIsNull() {
         when(patientRepository.findById(1L)).thenReturn(Optional.empty());

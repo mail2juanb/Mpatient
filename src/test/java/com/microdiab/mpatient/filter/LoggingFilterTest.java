@@ -30,10 +30,8 @@ class LoggingFilterTest {
     @Mock
     private FilterChain filterChain;
 
-    /**
-     * Cas nominal :
-     * headers présents + appel de la chaîne de filtres
-     */
+
+
     @Test
     void doFilter_shouldLogRequestAndCallFilterChain()
             throws IOException, ServletException {
@@ -70,10 +68,7 @@ class LoggingFilterTest {
         );
     }
 
-    /**
-     * Cas limite :
-     * headers absents (null)
-     */
+
     @Test
     void doFilter_shouldWorkWhenHeadersAreMissing()
             throws IOException, ServletException {

@@ -48,7 +48,7 @@ public class PatientService {
      * @throws PatientDuplicateException if a patient with identical identifying information already exists
      */
     public Patient savePatient(Patient patient) {
-        // Vérifie si un patient avec les mêmes critères existe déjà
+        // Check whether a patient with the same criteria already exists.
         if (patientRepository.existsByLastnameAndFirstnameAndDateofbirthAndGender(
                 patient.getLastname(),
                 patient.getFirstname(),
@@ -56,7 +56,7 @@ public class PatientService {
                 patient.getGender())) {
             throw new PatientDuplicateException ("A patient already exists with the same last name, first name, date of birth, and gender.");
         }
-        // Sauvegarde le patient
+        // Save the patient
         return patientRepository.save(patient);
     }
 
@@ -74,11 +74,11 @@ public class PatientService {
      * @throws PatientNotFoundException if no patient exists with the specified id
      */
     public Patient updatePatient(Long id, Patient updatePatient) {
-        // Vérifiez si le patient existe
+        // Checks whether the patient exists
         Patient existingPatient = patientRepository.findById(id)
                 .orElseThrow(() -> new PatientNotFoundException("Le patient avec l'ID " + id + " n'existe pas."));
 
-        // Mettre à jour les informations du patient
+        // Update patient information
         existingPatient.setLastname(updatePatient.getLastname());
         existingPatient.setFirstname(updatePatient.getFirstname());
         existingPatient.setDateofbirth(updatePatient.getDateofbirth());
@@ -86,7 +86,7 @@ public class PatientService {
         existingPatient.setAddress(updatePatient.getAddress());
         existingPatient.setPhone(updatePatient.getPhone());
 
-        // Sauvegarder les modifications
+        // Save changes
         return patientRepository.save(existingPatient);
     }
 }

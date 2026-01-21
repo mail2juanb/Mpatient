@@ -44,12 +44,10 @@ public class GlobalHandlerException {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        log.info("*** ExceptionHandler for MethodArgumentNotValidException ***");
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            log.info("*** MethodArgumentNotValidException => {} : {} ***", fieldName, errorMessage);
             errors.put(fieldName, errorMessage);
         });
         return ResponseEntity.badRequest().body(errors);
@@ -64,7 +62,6 @@ public class GlobalHandlerException {
      */
     @ExceptionHandler(PatientDuplicateException.class)
     public ResponseEntity<Map<String, String>> handlePatientDuplicateException(PatientDuplicateException ex) {
-        //log.info("*** ExceptionHandler for PatientDuplicateException ***");
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
@@ -79,7 +76,6 @@ public class GlobalHandlerException {
      */
     @ExceptionHandler(PatientNotFoundException.class)
     public ResponseEntity<Map<String, String>> handlePatientNotFoundException(PatientNotFoundException ex) {
-        //log.info("*** ExceptionHandler for PatientNotFoundException ***");
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
