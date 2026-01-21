@@ -63,7 +63,6 @@ public class PatientController {
      */
     @Autowired
     public PatientController(PatientRepository patientRepository, PatientService patientService, TracingHelper tracing) {
-        // Spring will inject dependencies
         this.patientRepository = patientRepository;
         this.patientService = patientService;
         this.tracing = tracing;
@@ -154,7 +153,6 @@ public class PatientController {
             return ResponseEntity.badRequest().body(result.getAllErrors());
         }
 
-        // Si pas d'erreur de validation, sauvegarde le patient. Les autres erreurs de validation sont gérés par le globalexceptionhandler)
         Patient savedPatient = patientService.savePatient(patient);
 
         tracing.tag("patient.id", savedPatient.getId());
@@ -191,7 +189,6 @@ public class PatientController {
 
         if (result.hasErrors()) {
             tracing.error("ValidationError", result.getAllErrors().toString());
-            // Retourne les erreurs de validation
             log.debug("Patient not saved, validation error : {}", result.getAllErrors());
             return ResponseEntity.badRequest().body(result.getAllErrors());
         }

@@ -13,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
 
@@ -33,9 +31,6 @@ public class PatientControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-//    @Autowired
-//    private WebApplicationContext webApplicationContext;
-
     @Autowired
     private PatientRepository patientRepository;
 
@@ -44,12 +39,10 @@ public class PatientControllerIntegrationTest {
 
     @BeforeEach
     public void setup() {
-//        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         patientRepository.deleteAll();
     }
 
 
-    // Test de GET /patients
     @Test
     public void testShowPatientList() throws Exception {
         // Arrange
@@ -67,7 +60,6 @@ public class PatientControllerIntegrationTest {
     }
 
 
-    // Test de GET /patient/{id}
     @Test
     public void testShowPatientId_Found() throws Exception {
         // Arrange
@@ -89,7 +81,6 @@ public class PatientControllerIntegrationTest {
     }
 
 
-    // Test de POST /patient
     @Test
     public void testAddPatient_Valid() throws Exception {
         // Arrange
@@ -116,7 +107,6 @@ public class PatientControllerIntegrationTest {
     }
 
 
-    // Test de PUT /patient/{id}
     @Test
     public void testUpdatePatient_Valid() throws Exception {
         // Arrange

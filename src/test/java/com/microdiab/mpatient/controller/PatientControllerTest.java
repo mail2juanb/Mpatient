@@ -39,8 +39,6 @@ public class PatientControllerTest {
     private PatientController patientController;
 
 
-    // Vérifier que la méthode retourne bien la liste des patients.
-    // Mock : patientRepository.findAll() pour retourner une liste fictive de patients.
     @Test
     public void testShowPatientList() {
         // Arrange
@@ -58,8 +56,7 @@ public class PatientControllerTest {
         assertEquals("Dupont", response.getBody().get(0).getLastname());
     }
 
-    // Vérifier que la méthode retourne le bon patient ou lève une exception si le patient n’existe pas.
-    // Mock : patientRepository.findById(id) pour retourner un Optional vide ou un patient fictif.
+
     @Test
     public void testShowPatientId_Found() {
         // Arrange
@@ -84,8 +81,7 @@ public class PatientControllerTest {
         });
     }
 
-    // Vérifier que la méthode sauvegarde un patient valide ou retourne des erreurs de validation.
-    //Mock : patientService.savePatient(patient) pour retourner un patient fictif.
+
     @Test
     public void testAddPatient_Valid() {
         // Arrange
@@ -118,8 +114,7 @@ public class PatientControllerTest {
         assertEquals(400, response.getStatusCodeValue());
     }
 
-    // Vérifier que la méthode met à jour un patient existant ou retourne des erreurs de validation.
-    //Mock : patientService.updatePatient(id, patient) pour retourner un patient fictif.
+
     @Test
     public void testUpdatePatient_Valid() {
         // Arrange

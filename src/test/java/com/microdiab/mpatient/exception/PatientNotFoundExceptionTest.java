@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PatientNotFoundExceptionTest {
 
-    // Vérifier que l'exception est bien levée avec le bon message.
+
     @Test
     public void testPatientNotFoundException_Message() {
         // Arrange
@@ -20,7 +20,6 @@ public class PatientNotFoundExceptionTest {
                 () -> { throw new PatientNotFoundException(expectedMessage); }
         );
 
-        // Vérifie que le message est correct
         assertEquals(expectedMessage, exception.getMessage());
     }
 }

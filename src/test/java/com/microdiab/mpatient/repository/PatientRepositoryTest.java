@@ -11,12 +11,12 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest            // Configure un contexte Spring minimal pour les tests de la couche JPA.
-@ActiveProfiles("test") // Optionnel : pour utiliser un profil spécifique aux tests
+@DataJpaTest            // Configures a minimal Spring context for testing the JPA layer.
+@ActiveProfiles("test") // Optional: to use a specific profile for testing
 public class PatientRepositoryTest {
 
     @Autowired
-    private TestEntityManager entityManager;        // Permet de manipuler les entités en base de données de test (H2 par défaut).
+    private TestEntityManager entityManager;        // Allow to manipulate entities in the test database (H2 by default).
 
     @Autowired
     private PatientRepository patientRepository;
@@ -29,15 +29,15 @@ public class PatientRepositoryTest {
         patient.setFirstname("Jean");
         patient.setDateofbirth(LocalDate.of(1990, 1, 1));
         patient.setGender("M");
-        entityManager.persist(patient);     // Sauvegarde un patient en base pour le test.
-        entityManager.flush();              // Force la synchronisation avec la base de données.
+        entityManager.persist(patient);     // Saves a patient in the database for testing.
+        entityManager.flush();              // Forces synchronisation with the database.
 
         // Act
         boolean exists = patientRepository.existsByLastnameAndFirstnameAndDateofbirthAndGender(
                 "Dupont", "Jean", LocalDate.of(1990, 1, 1), "M");
 
         // Assert
-        assertThat(exists).isTrue();        // Vérifie que la méthode retourne true si le patient existe.
+        assertThat(exists).isTrue();
     }
 
     @Test
@@ -47,7 +47,7 @@ public class PatientRepositoryTest {
                 "Unknown", "User", LocalDate.of(2000, 1, 1), "F");
 
         // Assert
-        assertThat(exists).isFalse();       // Vérifie que la méthode retourne false si le patient n’existe pas.
+        assertThat(exists).isFalse();
     }
 }
 
